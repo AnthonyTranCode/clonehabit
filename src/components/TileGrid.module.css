@@ -1,0 +1,56 @@
+/* Tile Grid Styles */
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: var(--spacing-sm) 0;
+}
+
+.tile {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.tile:hover {
+  transform: scale(1.4);
+  opacity: 1 !important;
+}
+
+.tile:focus {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 1px;
+}
+
+.tile.completed {
+  box-shadow: 0 0 4px currentColor;
+}
+
+.tile.today {
+  outline: 1px solid var(--text-secondary);
+  outline-offset: 1px;
+}
+
+/* Responsive sizing */
+@media (min-width: 400px) {
+  .tile {
+    width: 11px;
+    height: 11px;
+  }
+}
+
+@media (min-width: 500px) {
+  .tile {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .grid {
+    gap: 4px;
+  }
+}
