@@ -104,6 +104,7 @@ export function HabitCard({ habit, onEdit, onOpenCalendar }: Props) {
         habitId={habit.id}
         completions={habit.completions}
         color={habit.color}
+        frequency={habit.frequency}
         onDateClick={(date) => {
           toggleCompletion(habit.id, date);
         }}

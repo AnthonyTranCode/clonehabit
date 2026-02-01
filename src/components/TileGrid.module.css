@@ -1,5 +1,44 @@
 /* Tile Grid Styles */
 
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* View Toggle */
+.viewToggle {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  width: fit-content;
+}
+
+.toggleButton {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.toggleButton:hover {
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+}
+
+.toggleButton.active {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+/* Days Grid */
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -14,11 +53,59 @@
   border: none;
   cursor: pointer;
   transition: transform var(--transition-fast), opacity var(--transition-fast);
+  position: relative;
 }
 
 .tile:hover {
   transform: scale(1.4);
   opacity: 1 !important;
+  z-index: 10;
+}
+
+/* Tooltip */
+.tile::after,
+.groupTile::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  z-index: 20;
+}
+
+.tile::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--bg-elevated);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+.tile:hover::after,
+.groupTile:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.tile:hover::before {
+  opacity: 1;
 }
 
 .tile:focus {
@@ -31,8 +118,85 @@
 }
 
 .tile.today {
-  outline: 1px solid var(--text-secondary);
+  outline: 2px solid var(--text-primary);
   outline-offset: 1px;
+}
+
+.tile.future {
+  cursor: default;
+}
+
+.tile.future:hover {
+  transform: none;
+  opacity: 0.1 !important;
+}
+
+/* Grouped Grid (Weeks, Months, Quarters) */
+.groupedGrid {
+  display: grid;
+  gap: 6px;
+  padding: var(--spacing-sm) 0;
+}
+
+.groupedGrid.weeks {
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+}
+
+.groupedGrid.months {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.groupedGrid.quarters {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.groupTile {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 60px;
+  cursor: default;
+  transition: transform var(--transition-fast);
+}
+
+.groupTile:hover {
+  transform: scale(1.02);
+}
+
+.groupTile.future {
+  opacity: 0.3;
+}
+
+.groupFill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: height var(--transition-normal);
+}
+
+.groupLabel {
+  position: relative;
+  z-index: 1;
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.groupPercentage {
+  position: relative;
+  z-index: 1;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-bottom: 8px;
 }
 
 /* Responsive sizing */
@@ -40,6 +204,22 @@
   .tile {
     width: 11px;
     height: 11px;
+  }
+
+  .groupedGrid.months {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .groupTile {
+    min-height: 70px;
+  }
+
+  .groupLabel {
+    font-size: 0.6875rem;
+  }
+
+  .groupPercentage {
+    font-size: 1rem;
   }
 }
 
@@ -52,5 +232,21 @@
 
   .grid {
     gap: 4px;
+  }
+
+  .groupedGrid.months {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .groupTile {
+    min-height: 80px;
+  }
+
+  .groupLabel {
+    font-size: 0.75rem;
+  }
+
+  .groupPercentage {
+    font-size: 1.125rem;
   }
 }

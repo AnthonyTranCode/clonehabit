@@ -1,6 +1,6 @@
 // Streak calculation utilities
 
-import { format, subDays, parseISO, differenceInDays } from 'date-fns';
+import { format, subDays, parseISO, differenceInDays, startOfYear, endOfYear, eachDayOfInterval } from 'date-fns';
 import type { Completion } from '@/types';
 
 // Calculate current streak for a habit
@@ -77,15 +77,13 @@ export function calculateLongestStreak(
   return longestStreak;
 }
 
-// Get completion dates for tile grid (last N days)
+// Get completion dates for tile grid (from Jan 1st of current year)
 export function getCompletionDatesForGrid(
   completions: Completion[],
-  habitId: string,
-  days: number = 70
+  habitId: string
 ): Set<string> {
-  const endDate = new Date();
-  const startDate = subDays(endDate, days - 1);
-  const startStr = format(startDate, 'yyyy-MM-dd');
+  const startOfCurrentYear = startOfYear(new Date());
+  const startStr = format(startOfCurrentYear, 'yyyy-MM-dd');
 
   const dates = completions
     .filter((c) => c.habitId === habitId && c.date >= startStr)
@@ -103,14 +101,11 @@ export function isStreakActive(
   return completions.some((c) => c.habitId === habitId && c.date === today);
 }
 
-// Generate date array for tile grid
-export function generateDateGrid(days: number = 70): Date[] {
-  const dates: Date[] = [];
+// Generate date array for tile grid (full year: Jan 1st to Dec 31st)
+export function generateDateGrid(): Date[] {
   const today = new Date();
+  const yearStart = startOfYear(today);
+  const yearEnd = endOfYear(today);
 
-  for (let i = days - 1; i >= 0; i--) {
-    dates.push(subDays(today, i));
-  }
-
-  return dates;
+  return eachDayOfInterval({ start: yearStart, end: yearEnd });
 }
